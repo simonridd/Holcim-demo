@@ -31,6 +31,51 @@
     const match = s.match(/^(.*?)\s*[,;]?\s*(excluding VAT|including VAT)$/i);
     return {amount: money(match ? match[1] : s, currency), basis: match ? basis(match[2]) : ''};
   }
+  // Built-in demonstration price list, used only where the summary supplies no price.
+  // These are configurable application defaults, not verified Holcim commercial rates.
+  const defaultRates = [
+    {product:/ecopact/i,unit:'cubic metres',rate:155},
+    {product:/highpave/i,unit:'cubic metres',rate:165},
+    {product:/concrete|ready[ -]?mix/i,unit:'cubic metres',rate:145},
+    {product:/superdrain/i,unit:'tonnes',rate:105},
+    {product:/superdrive/i,unit:'tonnes',rate:95},
+    {product:/asphalt/i,unit:'tonnes',rate:85},
+    {product:/mot\s*type\s*1|type\s*1/i,unit:'tonnes',rate:32},
+    {product:/recycled/i,unit:'tonnes',rate:28}
+  ];
+  function applyPricingDefaults(model) {
+    const next={...model,lines:model.lines.map(line=>({...line}))};
+    const f=model.fields;
+    if(!known(f.Currency)) {
+      const found=new Set();
+      for(const text of [...next.lines.map(l=>l.price),f['Delivery charge'],f['Other charges']]) {
+        for(const token of String(text||'').match(/\b[A-Z]{3}\b|[£€$]/g)||[])found.add(({ '£':'GBP','€':'EUR','$':'USD' })[token]||token);
+      }
+      next.currency=found.size===1?[...found][0]:'GBP';
+      if(found.size>1)next.warnings=[...(next.warnings||[]),'Prices use more than one currency. Review the amounts before calculating a total.'];
+    }
+    if(!known(f['Price basis'])) {
+      const bases=new Set(next.lines.map(l=>l.basis).filter(Boolean));
+      for(const label of ['Delivery charge','Other charges']){const b=charge(f[label],next.currency).basis;if(b)bases.add(b);}
+      next.basis=bases.size===1?[...bases][0]:'excluding';
+    }
+    if(!known(f['VAT rate']))next.vat='20';
+    const vat=number(String(next.vat).replace(/%$/,'').trim());
+    const multiplier=next.basis==='including'&&vat!==null?1+vat/100:1;
+    for(const line of next.lines)if(!known(line.price)) {
+      const unit=unitKey(line.unit);
+      const rate=defaultRates.find(r=>r.unit===unit&&r.product.test(line.product))?.rate
+        ?? ({'cubic metres':145,tonnes:45,'m²':35,'square metres':35,kg:0.05,each:250}[unit]??100);
+      line.price=next.currency+' '+(Math.round(rate*multiplier*100)/100).toFixed(2);
+      line.basis=next.basis;
+    }
+    // Reparse explicit charges after inferring a currency; retain ambiguous stated values.
+    for(const [key,label,fallback] of [['delivery','Delivery charge',120],['other','Other charges',0]]) {
+      if(!known(f[label]))next[key]=(Math.round(fallback*multiplier*100)/100).toFixed(2);
+      else {const c=charge(f[label],next.currency);if(c.amount!==null&&(!c.basis||c.basis===next.basis))next[key]=String(c.amount);}
+    }
+    return next;
+  }
   function parse(text) {
     if (text.length > 100000) throw new Error('Use a summary of 100,000 characters or fewer.');
     const fields = Object.fromEntries(labels.map(label => [label, '']));
@@ -91,7 +136,7 @@
     return {amounts,subtotal,problems,total:net+tax,net,tax};
   }
   function isCurrency(c) { try { return /^[A-Z]{3}$/.test(c) && Intl.supportedValuesOf('currency').includes(c) && new Intl.NumberFormat('en-GB',{style:'currency',currency:c}).resolvedOptions().maximumFractionDigits === 2; } catch { return ['GBP','EUR','USD'].includes(c); } }
-  const api = {labels,sections,clean,known,basis,number,money,charge,parse,calculate,isCurrency};
+  const api = {labels,sections,clean,known,basis,number,money,charge,parse,applyPricingDefaults,calculate,isCurrency};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.QuoteCore = api;
 })(typeof window === 'undefined' ? globalThis : window);

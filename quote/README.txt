@@ -11,12 +11,15 @@ USE
 1. Copy the complete generated Holcim Sales Order Summary or Holcim Servicing
    Order Summary and paste it into Custom summary output.
 2. Select Create quote. The generated document is brought into view. A summary
-   without prices produces an explicitly unpriced draft, which can still be
-   printed. Add pricing opens the first missing material rate for entry.
-   Review all extracted details. Requested dates remain separate from confirmed
-   dates. No demonstration rate is automatically inserted.
+   without prices uses the built-in demonstration price list automatically.
+   These application defaults are not verified Holcim rates. The customer-facing
+   document keeps its standard demo/draft presentation without per-price markers.
+   Supplied prices, currency and VAT details take precedence. Review all extracted
+   details. Requested dates remain separate from confirmed dates.
 3. Confirm quantities, pricing units, currency, VAT basis/rate and all charges.
-   Unknown values remain unknown. Enter zero only for explicitly absent charges.
+   Missing pricing defaults to GBP, excluding VAT, 20% VAT, 120 delivery and zero
+   additional charges. Material rates are configured in quote-core.js. Project
+   details, specifications, dates, terms and references are never fabricated.
 4. Print / Save PDF opens the browser print dialog; choose Save as PDF.
    The editor is hidden when printing. The draft/demo wording remains visible.
 
@@ -79,6 +82,9 @@ to be regenerated or completed in the editor. Original source text stays in the
 input for comparison. Notes, including existing order tables, do not become new
 quote lines. Unknown or ambiguous prices, pricing units, charges, tax bases and
 currencies with other than two minor-unit digits prevent calculation of a total.
+On import only, missing prices and commercial pricing fields are populated from
+the configured demonstration defaults. Conflicting or malformed supplied values
+still require review; they are not silently replaced by defaults.
 Pricing uses a single reviewed currency and VAT basis. Mixed line bases and
 currencies require explicit review. No currency conversion is performed.
 VAT-inclusive totals extract VAT; VAT-exclusive totals add it. Material amounts

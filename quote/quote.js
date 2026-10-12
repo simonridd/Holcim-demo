@@ -100,7 +100,7 @@ function render() {
   $('doc-totals').replaceChildren();
   for(const [label,val] of [['Materials',result.subtotal],['Delivery',Q.money(model.delivery,model.currency)===null?null:Math.round(Q.money(model.delivery,model.currency)*100)],['Additional charges',Q.money(model.other,model.currency)===null?null:Math.round(Q.money(model.other,model.currency)*100)],['Net amount',result.net],['VAT'+(model.vat?' ('+model.vat.replace(/%$/,'')+'%)':''),result.tax]])addDefinition($('doc-totals'),label,amount(val));
   $('doc-total').textContent=result.total===null?(unpriced?'Price to be confirmed':'Awaiting details'):amount(result.total);
-  $('total-note').textContent=result.total===null?'Total pending confirmation of all prices, charges and VAT.':'Calculated from the reviewed quantities, rates and charges. Rounded to currency minor units.';
+  $('total-note').textContent=result.total===null?'Total pending confirmation of all prices, charges and VAT.':'Calculated from the quantities, unit rates and charges. Rounded to currency minor units.';
   $('doc-notes').replaceChildren();
   if(Q.known(f['Other charges'])){$('doc-notes').append(node('h3','Original additional charge notes'),node('p',f['Other charges']));}
   for(const label of Q.sections)if(Q.known(model.notes[label]))$('doc-notes').append(node('h3',label),node('p',model.notes[label]));
@@ -121,7 +121,7 @@ function importSummary() {
     const delivery=Q.charge(f['Delivery charge'],currency), other=Q.charge(f['Other charges'],currency);
     // An explicitly different charge tax basis must be reviewed, never silently converted.
     const usableCharge=c=>c.amount===null||(c.basis&&c.basis!==b)?'':String(c.amount);
-    model={...parsed,currency,basis:b,vat:Q.known(f['VAT rate'])?f['VAT rate'].replace(/%$/,'').trim():'',delivery:usableCharge(delivery),other:usableCharge(other)};
+    model=Q.applyPricingDefaults({...parsed,currency,basis:b,vat:Q.known(f['VAT rate'])?f['VAT rate'].replace(/%$/,'').trim():'',delivery:usableCharge(delivery),other:usableCharge(other)});
     buildEditor();render();$('import-feedback').textContent='Draft generated from '+model.lines.length+' material line'+(model.lines.length===1?'':'s')+'. See the document preview.';
     $('quote-preview').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
     $('quote-preview').focus({preventScroll:true});
