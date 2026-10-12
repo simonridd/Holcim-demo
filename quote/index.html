@@ -6,9 +6,9 @@
   <meta name="referrer" content="no-referrer">
   <meta name="description" content="Turn a Holcim conversation summary into a reviewed demonstration quotation.">
   <title>Project quotation | Holcim demo</title>
-  <link rel="stylesheet" href="./quote.css">
-  <script src="./quote-core.js" defer></script>
-  <script src="./quote.js" defer></script>
+  <link rel="stylesheet" href="./quote.css?v=20261012-2">
+  <script src="./quote-core.js?v=20261012-2" defer></script>
+  <script src="./quote.js?v=20261012-2" defer></script>
 </head>
 <body>
   <div class="utility screen-only"><div class="wrap">UK / CUSTOMER EXPERIENCE DEMO <a href="../">Back to materials & guidance ↗</a></div></div>
@@ -21,11 +21,12 @@
         <details class="panel" id="review"><summary>02 / Review quote details <span>＋</span></summary><p class="muted">Confirm captured details against the conversation. Enter agreed values for any gaps.</p><div id="field-editor" class="fields"></div><h3>Materials</h3><div id="line-editor"></div><button class="text-button" id="add-line">＋ Add a material</button><h3>Pricing</h3><div class="fields"><label>Currency<input id="currency" maxlength="3" placeholder="e.g. GBP" autocomplete="off"></label><label>Price basis<select id="basis"><option value="">Not discussed</option><option value="excluding">Excluding VAT</option><option value="including">Including VAT</option></select></label><label>VAT rate (%)<input id="vat" inputmode="decimal" placeholder="Not discussed"></label><label>Delivery charge<input id="delivery" inputmode="decimal" placeholder="Not discussed"></label><label class="full">Additional charges<input id="other" inputmode="decimal" placeholder="Not discussed"></label></div><p class="muted">Charges must use the selected currency and VAT basis. Enter 0 only when no charge is explicitly confirmed. Rates must be per the quantity unit.</p><div id="notes-editor"></div></details>
         <section class="panel readiness"><p class="eyebrow">Ready for review</p><p id="readiness-title">Add a summary to begin.</p><ul id="checks"></ul></section>
       </aside>
-      <section class="preview" aria-label="Quote preview">
-        <div class="preview-toolbar screen-only"><span>Document preview <span class="draft-dot">● Draft</span></span><button class="button" id="print" disabled>Print / Save PDF ↗</button></div>
+      <section class="preview" id="quote-preview" aria-label="Quote preview" tabindex="-1">
+        <div class="preview-toolbar screen-only"><span id="preview-status">Document preview <span class="draft-dot">● Draft</span></span><button class="button" id="print" disabled>Print / Save PDF ↗</button></div>
+        <div class="draft-guidance screen-only" id="draft-guidance" hidden><div><strong>Draft generated · pricing to be confirmed</strong><p id="draft-guidance-message"></p></div><button class="button" id="add-pricing">Add pricing →</button></div>
         <article class="paper" id="quote-document">
-          <div class="document-head"><img class="logo" src="./holcim-logo.svg" alt="Holcim"><div class="document-type"><p class="eyebrow">Materials & project solutions</p><h2>Quotation</h2><span class="draft-label">DEMONSTRATION · DRAFT FOR REVIEW</span></div></div>
-          <div class="document-intro"><p>Prepared from your project conversation</p><p class="muted">Subject to adviser review, specification and availability checks.</p></div>
+          <div class="document-head"><img class="logo" src="./holcim-logo.svg" alt="Holcim"><div class="document-type"><p class="eyebrow">Materials & project solutions</p><h2>Quotation</h2><span class="draft-label" id="doc-draft-label">DEMONSTRATION · DRAFT FOR REVIEW</span></div></div>
+          <div class="document-intro"><p id="doc-intro">Prepared from your project conversation</p><p class="muted">Subject to adviser review, specification and availability checks.</p></div>
           <div class="parties"><section><h3>Prepared for</h3><p id="doc-customer">Customer to be confirmed</p><p id="doc-company"></p></section><section><h3>Project / delivery site</h3><p id="doc-project">Project to be confirmed</p><p id="doc-postcode"></p></section></div>
           <dl class="reference-grid" id="doc-references"></dl>
           <section class="material-section"><div class="section-title"><h3>Your materials</h3><span id="doc-price-basis">Pricing to be confirmed</span></div><div class="table-scroll"><table><caption class="sr">Quoted materials and calculated line amounts</caption><thead><tr><th scope="col">Material / specification</th><th scope="col">Quantity</th><th scope="col">Unit price</th><th scope="col">Amount</th></tr></thead><tbody id="doc-lines"><tr><td colspan="4" class="empty">Your material requirements will appear here.</td></tr></tbody></table></div></section>
