@@ -74,6 +74,12 @@ function render() {
   $('print').disabled=!model;
   if(!model) return;
   const f=model.fields, result=Q.calculate(model);
+  const unpriced=model.lines.length>0 && model.lines.every(line=>!Q.known(line.price));
+  $('preview-status').textContent=unpriced?'Unpriced draft generated':result.total===null?'Draft generated · pricing needs review':'Draft generated · calculated';
+  $('draft-guidance').hidden=result.total!==null;
+  $('draft-guidance-message').textContent=unpriced?'Your project details and materials are ready in the draft below. This summary contains no prices. Print the unpriced draft, or enter reviewed rates and charges to calculate a total.':'Your draft is ready below. Review the missing or inconsistent commercial details to calculate the total. You can still print the draft.';
+  $('doc-draft-label').textContent=unpriced?'DEMONSTRATION · UNPRICED DRAFT':'DEMONSTRATION · DRAFT FOR REVIEW';
+  $('doc-intro').textContent=unpriced?'Unpriced draft prepared from your project conversation':'Prepared from your project conversation';
   $('doc-customer').textContent=display(f.Customer,'Customer to be confirmed');$('doc-company').textContent=Q.known(f.Company)?f.Company:'';
   $('doc-project').textContent=display(f.Project,'Project to be confirmed');$('doc-postcode').textContent=Q.known(f['Site postcode'])?f['Site postcode']:'';
   $('doc-references').replaceChildren();
@@ -93,7 +99,7 @@ function render() {
   for(const label of ['Payment terms','Purchase reference'])addDefinition($('doc-terms'),label,display(f[label]));
   $('doc-totals').replaceChildren();
   for(const [label,val] of [['Materials',result.subtotal],['Delivery',Q.money(model.delivery,model.currency)===null?null:Math.round(Q.money(model.delivery,model.currency)*100)],['Additional charges',Q.money(model.other,model.currency)===null?null:Math.round(Q.money(model.other,model.currency)*100)],['Net amount',result.net],['VAT'+(model.vat?' ('+model.vat.replace(/%$/,'')+'%)':''),result.tax]])addDefinition($('doc-totals'),label,amount(val));
-  $('doc-total').textContent=result.total===null?'Awaiting details':amount(result.total);
+  $('doc-total').textContent=result.total===null?(unpriced?'Price to be confirmed':'Awaiting details'):amount(result.total);
   $('total-note').textContent=result.total===null?'Total pending confirmation of all prices, charges and VAT.':'Calculated from the reviewed quantities, rates and charges. Rounded to currency minor units.';
   $('doc-notes').replaceChildren();
   if(Q.known(f['Other charges'])){$('doc-notes').append(node('h3','Original additional charge notes'),node('p',f['Other charges']));}
@@ -103,7 +109,7 @@ function render() {
   if(!Q.known(f['Confirmed delivery']))reviewProblems.push('Delivery is not confirmed.');
   if(Q.known(model.notes['Outstanding checks']))reviewProblems.push('Review the outstanding checks shown on the quote.');
   $('checks').replaceChildren(...reviewProblems.map(s=>node('li',s)));
-  $('readiness-title').textContent=result.total===null?'Draft · pricing needs review':'Draft · calculated, ready for adviser review';
+  $('readiness-title').textContent=unpriced?'Draft generated · add pricing when available':result.total===null?'Draft generated · pricing needs review':'Draft · calculated, ready for adviser review';
 }
 function importSummary() {
   const text=$('summary').value.trim();
@@ -116,10 +122,18 @@ function importSummary() {
     // An explicitly different charge tax basis must be reviewed, never silently converted.
     const usableCharge=c=>c.amount===null||(c.basis&&c.basis!==b)?'':String(c.amount);
     model={...parsed,currency,basis:b,vat:Q.known(f['VAT rate'])?f['VAT rate'].replace(/%$/,'').trim():'',delivery:usableCharge(delivery),other:usableCharge(other)};
-    buildEditor();render();$('import-feedback').textContent='Imported '+model.lines.length+' material line'+(model.lines.length===1?'':'s')+'. Review the details below.';
+    buildEditor();render();$('import-feedback').textContent='Draft generated from '+model.lines.length+' material line'+(model.lines.length===1?'':'s')+'. See the document preview.';
+    $('quote-preview').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+    $('quote-preview').focus({preventScroll:true});
   } catch(e){$('import-feedback').textContent=e.message;}
 }
 $('import').onclick=importSummary;
+$('add-pricing').onclick=()=>{
+  $('review').open=true;
+  const firstUnpriced=model?.lines.findIndex(line=>!Q.known(line.price));
+  const input=firstUnpriced>=0?$('line-editor').querySelector('[aria-label="Unit price '+(firstUnpriced+1)+'"]'):$('currency');
+  input?.focus();input?.select();
+};
 $('example').onclick=()=>{$('summary').value=sample;importSummary();$('import-feedback').textContent='Fictional example loaded. All prices are demonstration values.';};
 $('clear').onclick=()=>{model=null;$('summary').value='';location.reload();};
 $('add-line').onclick=()=>{if(!model){model={...Q.parse(''),currency:'',basis:'',vat:'',delivery:'',other:''};model.warnings=[];buildEditor();}model.lines.push({product:'',quantity:'',unit:'',specification:'',price:'',basis:''});buildLines();render();};

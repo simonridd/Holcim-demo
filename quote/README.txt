@@ -10,8 +10,11 @@ now links to it using a relative URL, preserving the GitHub Pages project base.
 USE
 1. Copy the complete generated Holcim Sales Order Summary or Holcim Servicing
    Order Summary and paste it into Custom summary output.
-2. Select Create quote. Review the extracted fields and material lines under
-   Review quote details. Requested dates remain separate from confirmed dates.
+2. Select Create quote. The generated document is brought into view. A summary
+   without prices produces an explicitly unpriced draft, which can still be
+   printed. Add pricing opens the first missing material rate for entry.
+   Review all extracted details. Requested dates remain separate from confirmed
+   dates. No demonstration rate is automatically inserted.
 3. Confirm quantities, pricing units, currency, VAT basis/rate and all charges.
    Unknown values remain unknown. Enter zero only for explicitly absent charges.
 4. Print / Save PDF opens the browser print dialog; choose Save as PDF.
