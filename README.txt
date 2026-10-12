@@ -6,6 +6,8 @@ PUBLISH USING YOUR BROWSER
    requires a public repository. Ordinary Pages publication is publicly reachable.
 2. Extract the ZIP and upload these files to the repository ROOT, not the ZIP:
    index.html
+   contact-template.js
+   quote/ (all route assets)
    genesys-sdk-264.0.0.min.js
    GENESYS_SDK_LICENSE.txt
    .nojekyll (optional but recommended; disables Jekyll processing)
@@ -31,13 +33,14 @@ CONFIGURE OAUTH IN GENESYS CLOUD
 PRESENTER SETUP / RUNNING THE DEMO
 1. In Presenter setup, choose your region (Ireland is the default), enter the
    OAuth client ID and outbound contact-list ID.
-2. Edit the JSON column mapping to match the list's exact column names. Default
-   mandatory columns: FirstName, LastName, Email, Phone and Enquiry. Use a suitable
-   text column for Enquiry. The mapping keys are form field names; the values
-   are Genesys list column names. Names are case-sensitive.
-   Required mappings: firstName, lastName, email, phone and enquiry.
-   Optional mappings: company, project, postcode, product, requiredDate, quantity,
-   unit and sourceArticle. null means capture that field in the Enquiry text.
+2. Edit the JSON column mapping to match the list's exact column names. Defaults match the 14 columns of Holcim Servicing Contact Template:
+   customerName, callbackNumber, projectName, siteLocation, requiredDate,
+   coreProduct, productQuantity, quantityUnit, customerCompany, enquiryDetails,
+   requestedTiming, handoffReason, nextAction, contextSource.
+   All columns need mappings, but captured values may be blank. callbackNumber
+   must be the list's Work phone column. Use the contact-list ID, not template ID
+   acc74b73-8ade-4282-91d6-ac5fd19b0461. Old saved mappings are replaced by
+   the template defaults on read, retaining public OAuth/client/list settings.
 3. Save setup, then Sign into Genesys. Sign in as your authorised Genesys user.
    After redirecting back, the app checks the contact-list columns. If mapping
    fails, it displays the actual column names so you can correct setup and sign
@@ -52,7 +55,12 @@ PRESENTER SETUP / RUNNING THE DEMO
    for the browser tab's session. No form/customer values are saved in storage.
 
 WHAT THE FORM DOES
-POST /api/v2/outbound/contactlists/<list-id>/contacts with one callable contact.
+POST /api/v2/outbound/contactlists/<list-id>/contacts with one contact.
+All project/contact inputs are optional; permission to contact remains required.
+Names are combined into customerName; address/postcode form siteLocation.
+Email and contact permission are retained in enquiryDetails; article context goes
+into contextSource. Missing details are blank. Records with a callback number
+are callable; records without a number have callable=false.
 This creates an outbound-list record, not an External Contact/CRM person, order,
 interaction or scheduled callback. An active campaign using that list may call
 new contacts. Use a dedicated demonstration list and fictional details.
