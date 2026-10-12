@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="Turn a Holcim conversation summary into a reviewed demonstration quotation.">
+  <title>Project quotation | Holcim demo</title>
+  <link rel="stylesheet" href="./quote.css">
+  <script src="./quote-core.js" defer></script>
+  <script src="./quote.js" defer></script>
+</head>
+<body>
+  <div class="utility screen-only"><div class="wrap">UK / CUSTOMER EXPERIENCE DEMO <a href="../">Back to materials & guidance ↗</a></div></div>
+  <header class="screen-only"><div class="wrap nav"><a href="../" aria-label="Holcim demo home"><img class="logo" src="./holcim-logo.svg" alt="Holcim"></a><span>Project quotations</span><span class="tag">SUMMARY → QUOTE</span></div></header>
+  <main class="wrap">
+    <section class="intro screen-only"><div><p class="eyebrow">Your conversation. The next step.</p><h1>From project brief<br>to project quote.</h1><p>Bring the details together in a clear, itemised quotation.<br>Paste a Holcim summary, check the details, then save as PDF.</p></div><div class="step"><span>01 Import</span><span>02 Review</span><span>03 Print / PDF</span></div></section>
+    <div class="workspace">
+      <aside class="editor screen-only" aria-label="Quote editor">
+        <section class="panel"><p class="eyebrow">01 / Conversation summary</p><h2>Start with the summary</h2><p class="muted">Copy the output from Holcim Sales Order Summary or Holcim Servicing Order Summary.</p><label for="summary">Custom summary output</label><textarea id="summary" rows="9" maxlength="100000" placeholder="Paste the complete summary here…"></textarea><button class="button primary" id="import">Create quote →</button><div class="secondary-actions"><button id="example" class="text-button">Try an example</button><button id="clear" class="text-button">Clear quote</button></div><p class="privacy">Your summary stays in this page. It is not uploaded or saved in browser storage.</p><p id="import-feedback" role="status"></p></section>
+        <details class="panel" id="review"><summary>02 / Review quote details <span>＋</span></summary><p class="muted">Confirm captured details against the conversation. Enter agreed values for any gaps.</p><div id="field-editor" class="fields"></div><h3>Materials</h3><div id="line-editor"></div><button class="text-button" id="add-line">＋ Add a material</button><h3>Pricing</h3><div class="fields"><label>Currency<input id="currency" maxlength="3" placeholder="e.g. GBP" autocomplete="off"></label><label>Price basis<select id="basis"><option value="">Not discussed</option><option value="excluding">Excluding VAT</option><option value="including">Including VAT</option></select></label><label>VAT rate (%)<input id="vat" inputmode="decimal" placeholder="Not discussed"></label><label>Delivery charge<input id="delivery" inputmode="decimal" placeholder="Not discussed"></label><label class="full">Additional charges<input id="other" inputmode="decimal" placeholder="Not discussed"></label></div><p class="muted">Charges must use the selected currency and VAT basis. Enter 0 only when no charge is explicitly confirmed. Rates must be per the quantity unit.</p><div id="notes-editor"></div></details>
+        <section class="panel readiness"><p class="eyebrow">Ready for review</p><p id="readiness-title">Add a summary to begin.</p><ul id="checks"></ul></section>
+      </aside>
+      <section class="preview" aria-label="Quote preview">
+        <div class="preview-toolbar screen-only"><span>Document preview <span class="draft-dot">● Draft</span></span><button class="button" id="print" disabled>Print / Save PDF ↗</button></div>
+        <article class="paper" id="quote-document">
+          <div class="document-head"><img class="logo" src="./holcim-logo.svg" alt="Holcim"><div class="document-type"><p class="eyebrow">Materials & project solutions</p><h2>Quotation</h2><span class="draft-label">DEMONSTRATION · DRAFT FOR REVIEW</span></div></div>
+          <div class="document-intro"><p>Prepared from your project conversation</p><p class="muted">Subject to adviser review, specification and availability checks.</p></div>
+          <div class="parties"><section><h3>Prepared for</h3><p id="doc-customer">Customer to be confirmed</p><p id="doc-company"></p></section><section><h3>Project / delivery site</h3><p id="doc-project">Project to be confirmed</p><p id="doc-postcode"></p></section></div>
+          <dl class="reference-grid" id="doc-references"></dl>
+          <section class="material-section"><div class="section-title"><h3>Your materials</h3><span id="doc-price-basis">Pricing to be confirmed</span></div><div class="table-scroll"><table><caption class="sr">Quoted materials and calculated line amounts</caption><thead><tr><th scope="col">Material / specification</th><th scope="col">Quantity</th><th scope="col">Unit price</th><th scope="col">Amount</th></tr></thead><tbody id="doc-lines"><tr><td colspan="4" class="empty">Your material requirements will appear here.</td></tr></tbody></table></div></section>
+          <div class="commercial"><section class="delivery"><h3>Delivery requirements</h3><dl id="doc-delivery"></dl><h3>Commercial notes</h3><dl id="doc-terms"></dl></section><section class="totals" aria-label="Quote totals"><dl id="doc-totals"></dl><div class="grand-total"><span>Total</span><strong id="doc-total">Awaiting details</strong></div><p id="total-note">No prices or tax assumptions have been added.</p></section></div>
+          <section class="document-notes" id="doc-notes"></section>
+          <section class="review-notice"><strong>A clear starting point for your project.</strong><p>This demonstration quotation is a draft, not an order confirmation. Review all extracted details and commercial terms before issuing a quote. Requested delivery dates do not reserve availability.</p></section>
+          <footer><span>Holcim · Customer experience demo</span><span>Prepared from a conversation summary</span></footer>
+        </article>
+        <p class="preview-caption screen-only">A clean quotation, with the original requirements kept in view.</p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
