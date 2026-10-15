@@ -1,4 +1,4 @@
-/* Deterministic import and arithmetic: no inferred prices, dates or tax. */
+/* Deterministic summary import and arithmetic, plus local draft metadata. */
 (function (root) {
   'use strict';
   const labels = ['Customer','Company','Project','Site postcode','Status','Currency','Price basis','VAT rate','Delivery charge','Other charges','Valid until','Payment terms','Purchase reference','Quote reference','Order reference','Requested delivery','Confirmed delivery','Delivery window','Site access'];
@@ -76,6 +76,15 @@
     }
     return next;
   }
+  // Create once per new draft; editing or printing must retain the same metadata.
+  function createDraftMetadata(now = new Date()) {
+    const validUntil = new Date(now);
+    validUntil.setDate(validUntil.getDate() + 14);
+    return {
+      'Quote reference': 'HOL-' + root.crypto.randomUUID().replace(/-/g, '').slice(0, 12).toUpperCase(),
+      'Valid until': validUntil.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'})
+    };
+  }
   function parse(text) {
     if (text.length > 100000) throw new Error('Use a summary of 100,000 characters or fewer.');
     const fields = Object.fromEntries(labels.map(label => [label, '']));
@@ -136,7 +145,7 @@
     return {amounts,subtotal,problems,total:net+tax,net,tax};
   }
   function isCurrency(c) { try { return /^[A-Z]{3}$/.test(c) && Intl.supportedValuesOf('currency').includes(c) && new Intl.NumberFormat('en-GB',{style:'currency',currency:c}).resolvedOptions().maximumFractionDigits === 2; } catch { return ['GBP','EUR','USD'].includes(c); } }
-  const api = {labels,sections,clean,known,basis,number,money,charge,parse,applyPricingDefaults,calculate,isCurrency};
+  const api = {labels,sections,clean,known,basis,number,money,charge,parse,createDraftMetadata,applyPricingDefaults,calculate,isCurrency};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.QuoteCore = api;
 })(typeof window === 'undefined' ? globalThis : window);

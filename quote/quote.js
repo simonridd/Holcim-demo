@@ -122,6 +122,7 @@ function importSummary() {
     // An explicitly different charge tax basis must be reviewed, never silently converted.
     const usableCharge=c=>c.amount===null||(c.basis&&c.basis!==b)?'':String(c.amount);
     model=Q.applyPricingDefaults({...parsed,currency,basis:b,vat:Q.known(f['VAT rate'])?f['VAT rate'].replace(/%$/,'').trim():'',delivery:usableCharge(delivery),other:usableCharge(other)});
+    Object.assign(model.fields,Q.createDraftMetadata());
     buildEditor();render();$('import-feedback').textContent='Draft generated from '+model.lines.length+' material line'+(model.lines.length===1?'':'s')+'. See the document preview.';
     $('quote-preview').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
     $('quote-preview').focus({preventScroll:true});
@@ -136,6 +137,6 @@ $('add-pricing').onclick=()=>{
 };
 $('example').onclick=()=>{$('summary').value=sample;importSummary();$('import-feedback').textContent='Fictional example loaded. All prices are demonstration values.';};
 $('clear').onclick=()=>{model=null;$('summary').value='';location.reload();};
-$('add-line').onclick=()=>{if(!model){model={...Q.parse(''),currency:'',basis:'',vat:'',delivery:'',other:''};model.warnings=[];buildEditor();}model.lines.push({product:'',quantity:'',unit:'',specification:'',price:'',basis:''});buildLines();render();};
+$('add-line').onclick=()=>{if(!model){model={...Q.parse(''),currency:'',basis:'',vat:'',delivery:'',other:''};model.warnings=[];Object.assign(model.fields,Q.createDraftMetadata());buildEditor();}model.lines.push({product:'',quantity:'',unit:'',specification:'',price:'',basis:''});buildLines();render();};
 for(const key of ['currency','basis','vat','delivery','other'])$(key).addEventListener('input',()=>{if(!model)return;model[key]=$(key).value;if(key==='currency'){model.currency=model.currency.toUpperCase();$(key).value=model.currency;}render();});
 $('print').onclick=()=>window.print();

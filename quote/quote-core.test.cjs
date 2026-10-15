@@ -43,3 +43,17 @@ test('provided prices are retained and their explicit currency and VAT basis are
 test('explicit free delivery and zero VAT override pricing defaults',()=>{const m=noPrices();m.fields.Currency='GBP';m.currency='GBP';m.fields['VAT rate']='0%';m.vat='0';m.fields['Delivery charge']='GBP 0 excluding VAT';m.delivery='0';const priced=Q.applyPricingDefaults(m);assert.equal(priced.delivery,'0');assert.equal(priced.vat,'0');assert.equal(Q.calculate(priced).total,362500);});
 test('inclusive default prices use the explicit VAT rate without adding it twice',()=>{const m=noPrices();m.fields['Price basis']='Including VAT';m.basis='including';m.fields['VAT rate']='10%';m.vat='10';const priced=Q.applyPricingDefaults(m);assert.equal(priced.lines[0].price,'GBP 159.50');assert.equal(priced.delivery,'132.00');assert.equal(Q.calculate(priced).total,411950);});
 test('defaults never convert or hide mixed stated currencies',()=>{const m=noPrices();m.lines[0].price='EUR 200';m.fields['Delivery charge']='GBP 120 excluding VAT';const priced=Q.applyPricingDefaults(m);assert.equal(priced.lines[0].price,'EUR 200');assert.equal(Q.calculate(priced).total,null);assert.ok(priced.warnings.length);});
+
+test('new drafts have distinct random references and expire 14 calendar days from creation',()=>{
+  const now=new Date(2026,9,15,12);
+  const first=Q.createDraftMetadata(now), second=Q.createDraftMetadata(now);
+  assert.match(first['Quote reference'],/^HOL-[A-F0-9]{12}$/);
+  assert.notEqual(first['Quote reference'],second['Quote reference']);
+  assert.equal(first['Valid until'],'29 October 2026');
+  assert.equal(now.getDate(),15);
+});
+test('draft validity crosses month, year and leap-day boundaries',()=>{
+  for(const [date,expected] of [[new Date(2026,11,25),'8 January 2027'],[new Date(2028,1,20),'5 March 2028']]) {
+    assert.equal(Q.createDraftMetadata(date)['Valid until'],expected);
+  }
+});
