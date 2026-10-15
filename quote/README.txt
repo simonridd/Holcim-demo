@@ -19,7 +19,12 @@ USE
 3. Confirm quantities, pricing units, currency, VAT basis/rate and all charges.
    Missing pricing defaults to GBP, excluding VAT, 20% VAT, 120 delivery and zero
    additional charges. Material rates are configured in quote-core.js. Project
-   details, specifications, dates, terms and references are never fabricated.
+   details, specifications, delivery dates, terms and existing order references
+   remain as supplied. Each new draft receives a random HOL- reference and a
+   valid-until date 14 calendar days from creation, replacing any imported quote
+   reference or validity date. Both stay fixed during editing and printing and
+   can be reviewed in the editor. They are local demo metadata, not a registered
+   quote reference or an approved commercial validity period.
 4. Print / Save PDF opens the browser print dialog; choose Save as PDF.
    The editor is hidden when printing. The draft/demo wording remains visible.
 
