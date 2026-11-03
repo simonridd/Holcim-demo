@@ -127,3 +127,22 @@ Assumptions: authorised user, correct OAuth redirect/scopes, dedicated demo list
 Review: public content, brand permission, OAuth/client/list settings, live login,
 contact creation and campaign behaviour. No real credentials or customer records
 were included, no live contacts created and no deployment performed.
+
+
+Demo Phone Messenger automation
+-------------------------------
+index.html includes messenger-demo-bridge.js beside the existing Messenger snippet.
+The bridge is inactive for ordinary standalone visits. When embedded by the local
+Demo Audio Studio (http://127.0.0.1 or http://localhost), it accepts a bounded
+handshake and customer-text send requests from that exact parent, origin, nonce
+and run ID. It forwards message-arrival events back to that parent. It never
+receives OAuth credentials or agent tokens and it does not change deployment,
+routing, the contact form or Genesys configuration.
+
+Agent PKCE sign-in and script controls live in Demo Audio Studio. Users explicitly
+send a visible demo marker, verify the matching assigned interaction, and bind it
+before two-way playback. This website bridge alone cannot send agent replies.
+A send with an uncertain result is not automatically repeated. Use fictional
+messages and review the live thread before restarting a demonstration.
+
+Rollback: remove the messenger-demo-bridge.js script tag from index.html.
