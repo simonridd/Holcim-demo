@@ -146,3 +146,13 @@ A send with an uncertain result is not automatically repeated. Use fictional
 messages and review the live thread before restarting a demonstration.
 
 Rollback: remove the messenger-demo-bridge.js script tag from index.html.
+
+Demo Phone Clear demo / Start fresh (2026-11-04)
+The bridge now advertises its clear capability to the linked localhost presenter.
+An explicit Clear action calls MessagingService.clearConversation and confirms its
+result; rejected/unconfirmed commands do not report success. This can disconnect the
+web conversation and clear its history. It requires Clear conversation enabled in
+the existing Messenger configuration; this change does not edit that configuration.
+Clear requests are bounded/deduplicated, including through conversationCleared.
+Standalone visits stay inert; no extra messages or automatic clears are introduced.
+Check with: node --test contact-template.test.cjs messenger-demo-bridge.test.cjs
