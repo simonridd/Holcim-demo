@@ -9,6 +9,7 @@
   const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
   let peer, origin, nonce, runId, subscribed = false;
   const attempts = new Map();
+  const clears = new Map();
   const sdk = () => window[window._genesysJs || 'Genesys'];
   const plugins = new Map();
   function ready(plugin) {
@@ -31,7 +32,8 @@
         clearTimeout(timer);
         // Documented, harmless rejection: the native window is already open.
         if (name === 'Messenger.open' && (typeof error === 'string' ? error : error?.message) === 'Messenger is already opened.') resolve();
-        else reject(new Error('Messenger rejected the command.'));
+        else if (name === 'MessagingService.clearConversation' && (typeof error === 'string' ? error : error?.message) === 'There is no active conversation found to clear') resolve();
+        else reject(new Error(name === 'MessagingService.clearConversation' ? 'Messenger could not clear the conversation. Check that Clear conversation is enabled in its configuration, then retry when ready.' : 'Messenger rejected the command.'));
       });
     });
   }
@@ -55,10 +57,22 @@
       if (typeof value.nonce !== 'string' || !/^[a-f0-9]{32,128}$/.test(value.nonce) || !uuid.test(value.runId)) return;
       peer = event.source; origin = event.origin; nonce = value.nonce; runId = value.runId;
       subscribe();
-      post('ready', { sdkAvailable: typeof sdk() === 'function', deploymentId: String(sdk()?.c?.deploymentId || '').slice(0, 100) });
+      post('ready', { sdkAvailable: typeof sdk() === 'function', canClear: true, deploymentId: String(sdk()?.c?.deploymentId || '').slice(0, 100) });
       return;
     }
     if (!peer || event.source !== peer || event.origin !== origin || value.nonce !== nonce || value.runId !== runId) return;
+    if (value.type === 'clear' && uuid.test(value.requestId)) {
+      const old = clears.get(value.requestId);
+      if (old) { if (old.done) post('result', { requestId: value.requestId, ok: old.ok, error: old.error }); return; }
+      if (clears.size >= 100) { post('result', { requestId: value.requestId, ok: false, error: 'Bridge clear limit reached. Reload the webpage before a new demonstration.' }); return; }
+      const attempt = { done: false, ok: false, error: '' }; clears.set(value.requestId, attempt);
+      const clearNonce = nonce;
+      void command('MessagingService.clearConversation', {}).then(() => { attempt.ok = true; }, error => { attempt.error = error.message; }).finally(() => {
+        attempt.done = true;
+        if (clearNonce === nonce) post('result', { requestId: value.requestId, ok: attempt.ok, error: attempt.error });
+      });
+      return;
+    }
     if (value.type !== 'send' || !uuid.test(value.requestId) || typeof value.text !== 'string' || !value.text.trim() || value.text.length > 2000) return;
     const old = attempts.get(value.requestId);
     if (old) {
