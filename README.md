@@ -4,6 +4,7 @@ Shared public GitHub Pages hosting for customer demonstration websites. Each dem
 
 - Collection: https://simonridd.github.io/demo-sites/
 - Holcim: https://simonridd.github.io/demo-sites/holcim/
+- Harbourview Hotels: https://simonridd.github.io/demo-sites/harbourview/
 - Holcim quotation workspace: https://simonridd.github.io/demo-sites/quote/
 
 ## Add or revise a demo
