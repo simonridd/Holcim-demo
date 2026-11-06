@@ -1,0 +1,13 @@
+{
+  "demos": [
+    {
+      "slug": "holcim",
+      "title": "Holcim",
+      "category": "Building materials",
+      "description": "From product guidance to a project enquiry. Explore a connected materials experience, with web messaging and a quotation workspace.",
+      "tags": ["Product guidance", "Web messaging", "Quotations"],
+      "accent": "#087b56",
+      "logo": "quote/holcim-logo.svg"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build demo site"
+  short_description: "Build and publish pages in the shared demo collection"
+  default_prompt: "Use $build-demo-site to create or update a customer demo page in our shared GitHub Pages collection."

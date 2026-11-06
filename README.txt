@@ -1,11 +1,16 @@
 HOLCIM DEMO — GITHUB PAGES WITH GENESYS PKCE
+
+The shared repository is now demo-sites. Start with README.md for the current
+collection layout. Holcim is at /demo-sites/holcim/ and the quotation workspace
+remains at /demo-sites/quote/. Register the NEW exact Holcim OAuth callback URI.
+The original /Holcim-demo/ Pages URL does not receive a repository redirect.
 No Python, Node, installation, build step or client secret required.
 
 PUBLISH USING YOUR BROWSER
 1. Create or choose a dedicated GitHub demo repository. On GitHub Free, Pages
    requires a public repository. Ordinary Pages publication is publicly reachable.
 2. Extract the ZIP and upload these files to the repository ROOT, not the ZIP:
-   index.html
+   index.html (the demo collection), assets/, demos.json and holcim/
    contact-template.js
    quote/ (all route assets)
    genesys-sdk-264.0.0.min.js
@@ -131,7 +136,7 @@ were included, no live contacts created and no deployment performed.
 
 Demo Phone Messenger automation
 -------------------------------
-index.html includes messenger-demo-bridge.js beside the existing Messenger snippet.
+holcim/index.html includes messenger-demo-bridge.js beside the existing Messenger snippet.
 The bridge is inactive for ordinary standalone visits. When embedded by the local
 Demo Audio Studio (http://127.0.0.1 or http://localhost), it accepts a bounded
 handshake and customer-text send requests from that exact parent, origin, nonce
@@ -145,7 +150,7 @@ before two-way playback. This website bridge alone cannot send agent replies.
 A send with an uncertain result is not automatically repeated. Use fictional
 messages and review the live thread before restarting a demonstration.
 
-Rollback: remove the messenger-demo-bridge.js script tag from index.html.
+Rollback: remove the messenger-demo-bridge.js script tag from holcim/index.html.
 
 Demo Phone Clear demo / Start fresh (2026-11-04)
 The bridge now advertises its clear capability to the linked localhost presenter.

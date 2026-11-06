@@ -2,7 +2,7 @@ HOLCIM SUMMARY TO QUOTE
 
 PUBLIC ROUTE
 quote/index.html is a static route. On the existing GitHub Pages project,
-the route is <published site base>/quote/ (for example /Holcim-demo/quote/).
+the route is <published site base>/quote/ (for example /demo-sites/quote/).
 The /quote URL redirects to /quote/ through normal directory hosting.
 It does not require presenter setup or Genesys authentication. The homepage
 now links to it using a relative URL, preserving the GitHub Pages project base.
