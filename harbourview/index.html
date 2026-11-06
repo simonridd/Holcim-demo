@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A little help before you arrive, and someone to turn to throughout your stay. Harbourview Hotels guest services.">
+  <title>Guest services | Harbourview Hotels</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./messenger-settings.js" defer></script>
+  <script src="./guest-services.js" defer></script>
+  <script src="../messenger-demo-bridge.js" defer></script>
+</head>
+<body>
+  <header class="masthead">
+    <a class="brand" href="#home" aria-label="Harbourview Hotels home"><span class="brand-mark" aria-hidden="true">H</span><span>HARBOURVIEW<small>HOTELS</small></span></a>
+    <a class="header-link" href="#help">Guest services <span aria-hidden="true">↗</span></a>
+  </header>
+  <main id="home">
+    <section class="hero" aria-labelledby="welcome">
+      <div class="hero-copy"><p class="eyebrow">A WARM WELCOME, BEFORE YOU ARRIVE</p><h1 id="welcome">A little less planning.<br><em>A little more staying.</em></h1><p class="intro">Plans change. Trains run late. Sometimes you just need to ask someone. We're here to help you feel looked after.</p><button class="primary" data-message>Message our team <span aria-hidden="true">↗</span></button><p class="quiet">Help before you arrive and throughout your stay.</p></div>
+      <div class="harbour" aria-hidden="true"><span class="sun"></span><div class="buildings"><i></i><i></i><i></i><i></i></div><svg class="sea" viewBox="0 0 600 250" preserveAspectRatio="none"><path fill="#315b63" d="M0 60 Q150 15 300 70 T600 65 V250 H0Z"/><path fill="#47747a" d="M0 110 Q150 55 300 120 T600 100 V250 H0Z"/><path fill="#729499" d="M0 170 Q150 120 300 165 T600 175 V250 H0Z"/><path d="M70 112 h78 M370 150 h100 M200 200 h98" stroke="#c4d1c7" stroke-width="2" fill="none"/></svg><div class="art-caption">Make room for a slower weekend.</div></div>
+    </section>
+    <section class="help" id="help" aria-labelledby="help-title"><div class="section-heading"><p class="eyebrow">YOUR STAY, MADE EASIER</p><h2 id="help-title">What can we help with?</h2></div><div class="cards">
+      <article><span class="card-number">01</span><h3>Before you arrive</h3><p>Running late or have a question about checking in? Let us know what you need.</p><button class="text-button" data-message>Ask about arrival <span aria-hidden="true">↗</span></button></article>
+      <article><span class="card-number">02</span><h3>The little details</h3><p>A quieter room, or something that would help your family settle in. Tell us your preferences and we'll check.</p><button class="text-button" data-message>Share a request <span aria-hidden="true">↗</span></button></article>
+      <article><span class="card-number">03</span><h3>During your stay</h3><p>If something isn't quite right, please tell us. Our team can help work out the next step with you.</p><button class="text-button" data-message>Talk to our team <span aria-hidden="true">↗</span></button></article>
+    </div></section>
+    <section class="care"><span class="care-symbol" aria-hidden="true">✳</span><div><p class="eyebrow">SOMEONE TO TURN TO</p><h2>Good service starts<br>with a conversation.</h2><p>Ask a question, share a request, or let us know how your stay is going.</p></div><button class="secondary" data-message>Start a conversation <span aria-hidden="true">↗</span></button></section>
+    <p id="message-status" class="message-status" role="status" aria-live="polite"></p>
+  </main>
+  <footer><span>HARBOURVIEW HOTELS</span><span>A stay that feels looked after.</span></footer>
+</body>
+</html>

@@ -5,9 +5,25 @@
       "title": "Holcim",
       "category": "Building materials",
       "description": "From product guidance to a project enquiry. Explore a connected materials experience, with web messaging and a quotation workspace.",
-      "tags": ["Product guidance", "Web messaging", "Quotations"],
+      "tags": [
+        "Product guidance",
+        "Web messaging",
+        "Quotations"
+      ],
       "accent": "#087b56",
       "logo": "quote/holcim-logo.svg"
+    },
+    {
+      "slug": "harbourview",
+      "title": "Harbourview Hotels",
+      "category": "Hospitality",
+      "description": "A little help before arrival and throughout a stay. Share a room request or start a conversation with guest services.",
+      "tags": [
+        "Guest services",
+        "Late arrival",
+        "Web messaging"
+      ],
+      "accent": "#173f46"
     }
   ]
 }
